@@ -21,10 +21,17 @@ jobs:
       uses: gradle/actions/setup-gradle@v3
 
     - name: Build Debug APK
-      run: gradle assembleDebug
+      working-directory: ./android_app
+      run: |
+        if [ -f "gradlew" ]; then
+          chmod +x gradlew
+          ./gradlew assembleDebug
+        else
+          gradle assembleDebug
+        fi
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: ProxyMe-APK
-        path: app/build/outputs/apk/debug/app-debug.apk
+        path: '**/*-debug.apk'
